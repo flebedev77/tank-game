@@ -386,6 +386,9 @@ class Tile {
                     if (this.image.id != "border") {
                         this.health -= bullet.power;
                     }
+                    if (this.image.id == "rock") {
+                      this.health = 0;
+                    }
                     if (this.health > 0 && this.image.id != "bedrock" && this.image.id != "rock") mineSound.play();
                     else if (this.health > 0) stoneBreakSounds[Math.floor(Math.random() * stoneBreakSounds.length)].play();
                     player.bullets.splice(i, 1);
@@ -399,6 +402,9 @@ class Tile {
                     if (line.collideBullet(bullet)) {
                         if (this.image.id != "border") {
                             this.health -= bullet.power;
+                        }
+                        if (this.image.id == "rock") {
+                           this.health = 0;
                         }
                         if (this.health > 0 && this.image.id != "bedrock" && this.image.id != "rock") mineSound.play();
                         else if (this.health > 0) stoneBreakSounds[Math.floor(Math.random() * stoneBreakSounds.length)].play();
@@ -784,7 +790,7 @@ function init() {
                     enemies.push(new Enemy(col * scale, row * scale, 34, 30));
                 }
             }
-            tiles.push(new Tile(col * scale, row * scale, scale, scale, options));
+            tiles.push(new Tile(col * scale, row * scale, scale+1, scale+1, options));
         }
     }
 }
@@ -806,8 +812,10 @@ function loop() {
     tiles.forEach((tile) => {
         let dx = player.position.x - tile.position.x;
         let dy = player.position.y - tile.position.y;
-        let d = Math.sqrt(dx * dx + dy * dy);
-        if (d < RENDER_DISTANCE) tile.draw();
+        let d = Math.sqrt(dx*dx + dy*dy);
+        if (
+          d < RENDER_DISTANCE
+        ) tile.draw();
 
         if (tile.solid && true == false) {
             for (let i = particles.length - 1; i >= 0; i--) {
